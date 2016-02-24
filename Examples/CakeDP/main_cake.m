@@ -1,8 +1,9 @@
 %% Eating Cake
-% Utility: log(c_t)
+% Utility: c_t^(1-eta)/(1-eta), eta=2
 % Cake size: W_t
 % Discount factor: beta
 % Transition: W_t+1 = W_t - c_t
+% 0 <= c_t <= W_t
 
 clear
 
@@ -16,7 +17,7 @@ cakemax = initial_cake;
 cakemin = 0;
 
 % Define function space
-degree = 10;
+degree = 12;
 fspace = fundefn('cheb', degree, cakemin, cakemax);
 grid = funnode(fspace);
 grid = gridmake(grid);
@@ -56,7 +57,7 @@ end
 % not analytic) cake
 time_horizon = 25;
 cons_trajectory = zeros(time_horizon,1);
-cons_start = 50;
+cons_start = cakemax/2;
 cake_level = zeros(time_horizon+1,1);
 cake_level(1) = initial_cake;
 

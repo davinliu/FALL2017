@@ -9,6 +9,6 @@ options = optimset('display','off');
 
 % Send to fmincon, can't consume more cake than you have
 [cons_new, val_new] = fmincon(value_handle, consumption,...
-    [], [], [], [], [], cakesize, [], options);
+    [], [], [], [], 0, cakesize, [], options);
 
 end
