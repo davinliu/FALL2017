@@ -32,7 +32,7 @@ error = 50000;
 value_grid = 0:1:cakemax;
 % Perform value function iteration
 while (error > tolerance) && its < 1000
-    value_plot(:,its) = funeval(coeffs, fspace, value_grid');
+    
     for pt = 1:length(grid)
         [cons_new(pt,:), val_new(pt,:)] = maxbell(consumption(pt), grid(pt), beta, coeffs, fspace);
     end
@@ -44,12 +44,6 @@ while (error > tolerance) && its < 1000
     val_old = val_new;
     its = its+1;
     display(['Iteration ' num2str(its-1) ' solved with error ' num2str(error)]);
-end
-
-% Plot value function over iterations
-for i = 1:20:size(value_plot,2)
-    plot(1:size(value_plot,1),value_plot(:,i));
-    hold on;
 end
 
 % Simulate a solution, any error is because you have reached 0 (numerical
