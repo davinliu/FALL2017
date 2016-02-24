@@ -70,3 +70,12 @@ for t = 1:time_horizon
 end
 plot(1:time_horizon,cons_trajectory); hold on;
 plot(1:time_horizon+1,cake_level);
+
+% Euler error calculation
+for t = 1:time_horizon-1
+    euler_error(t) = log(abs(beta*(1/cons_trajectory(t+1)^2)./(1/cons_trajectory(t)^2)-1));
+end
+
+disp(['Mean and max Euler error: (' num2str(mean(euler_error)), ',' num2str(max(euler_error)), ').']);
+
+disp(['This implies our average loss from numerical error is $1 for every: $' num2str(10^-mean(euler_error),8), ' dollars spent.']);
