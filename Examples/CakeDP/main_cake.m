@@ -27,7 +27,7 @@ grid = gridmake(grid);
 % Set initial guess
 consumption = grid/2;
 
-% Initialize
+% Initialize coeffs, value, iteration, error, and plotting grid
 coeffs = zeros(size(grid));
 val_old = coeffs;
 its = 1;
@@ -36,17 +36,30 @@ value_grid = 0:1:cakemax;
 
 % Perform value function iteration
 while (error > tolerance) && its < 1000
+    % Plot value function
     value_plot(:,its) = funeval(coeffs, fspace, value_grid');
+    
+    % Maximize bellman
     for pt = 1:length(grid)
         [cons_new(pt,:), val_new(pt,:)] = maxbell(consumption(pt), grid(pt), beta, coeffs, fspace);
     end
-    % Update guesses
+    
+    % Update initial control guess
     consumption = cons_new;
+    
+    % Fit new approximant and recover coefficients
     coeffs = funfitxy(fspace, grid, -val_new);
     
+    % Calculate error
     error = max(abs(val_new-val_old));
+    
+    % Store old value function
     val_old = val_new;
+    
+    % Increment counter
     its = its+1;
+    
+    % Display information
     display(['Iteration ' num2str(its-1) ' solved with error ' num2str(error)]);
 end
 
