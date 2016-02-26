@@ -8,7 +8,7 @@ cakesize_tomorrow = cakesize - consumption;
 cont_value = funeval(coeffs, fspace, cakesize_tomorrow);
 
 % Right hand side of the Bellman
-util = -(log(consumption) + beta*cont_value);
+util = -(-1/consumption + beta*cont_value);
 
 
 end
