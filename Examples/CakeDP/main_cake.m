@@ -51,9 +51,10 @@ while (error > tolerance) && its < 1000
 end
 
 % Plot value function over iterations
-for i = 1:20:size(value_plot,2)
+for i = 1:10:size(value_plot,2)
     plot(1:size(value_plot,1),value_plot(:,i));
     hold on;
+    pause(3)
 end
 xlabel('Cake size')
 ylabel('Discounted sum of infinite horizon utilities (utils)')
@@ -88,8 +89,12 @@ disp(['Mean and max Euler error: (' num2str(mean(euler_error)), ',' num2str(max(
 disp(['This implies our average loss from numerical error is $1 for every: $' num2str(10^-mean(euler_error),8), ' dollars spent.']);
 
 %% Fixed Point Iteration
-% Euler u'(c_t) = beta * u'(c_t+1)
-% Redefine as FP: W_t+1 = beta (u'(c_t+1)/u'(c_t))W_t+1
+% Suppose you have mutant cake that now grows over time:
+% W_t+1 = W_t - c_t + W_t^alpha
+% xxxxx
+
+% Set production function parameter
+alpha = 0.36;
 
 % Re-use function space above for W_t
 coeffs = zeros(size(grid));
