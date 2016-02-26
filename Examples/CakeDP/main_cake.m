@@ -6,6 +6,8 @@
 
 clear
 
+%% Value Function Iteration
+
 % Parameterize the model
 initial_cake = 100;
 beta = .90;
@@ -62,3 +64,8 @@ for t = 1:time_horizon
 end
 plot(1:time_horizon,cons_trajectory); hold on;
 plot(1:time_horizon+1,cake_level);
+
+%% Fixed Point Iteration
+%Euler u'(c_t) = beta * u'(c_t+1)
+
+% Re-use function space above
