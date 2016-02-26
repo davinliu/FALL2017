@@ -33,6 +33,7 @@ val_old = coeffs;
 its = 1;
 error = 50000;
 value_grid = 0:1:cakemax;
+
 % Perform value function iteration
 while (error > tolerance) && its < 1000
     value_plot(:,its) = funeval(coeffs, fspace, value_grid');
@@ -54,6 +55,9 @@ for i = 1:20:size(value_plot,2)
     plot(1:size(value_plot,1),value_plot(:,i));
     hold on;
 end
+xlabel('Cake size')
+ylabel('Discounted sum of infinite horizon utilities (utils)')
+
 
 % Simulate a solution, any error is because you have reached 0 (numerical
 % not analytic) cake
@@ -72,10 +76,11 @@ for t = 1:time_horizon
 end
 plot(1:time_horizon,cons_trajectory); hold on;
 plot(1:time_horizon+1,cake_level);
-
+xlabel('Time');
+ylabel('Consumption and remaining cake size');
 % Euler error calculation
 for t = 1:time_horizon-1
-    euler_error(t) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(t+1)^2)))/cons_trajectory(t)-1));: 
+    euler_error(t) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(t+1)^2)))/cons_trajectory(t)-1)); 
 end
 
 disp(['Mean and max Euler error: (' num2str(mean(euler_error)), ',' num2str(max(euler_error)), ').']);
@@ -88,3 +93,5 @@ disp(['This implies our average loss from numerical error is $1 for every: $' nu
 
 % Re-use function space above for W_t
 coeffs = zeros(size(grid));
+initial_cake = cakemax;
+
