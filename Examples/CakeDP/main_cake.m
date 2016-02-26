@@ -75,7 +75,7 @@ plot(1:time_horizon+1,cake_level);
 
 % Euler error calculation
 for t = 1:time_horizon-1
-    euler_error(t) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(t+1)^2)))/cons_trajectory(t)-1));
+    euler_error(t) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(t+1)^2)))/cons_trajectory(t)-1));: 
 end
 
 disp(['Mean and max Euler error: (' num2str(mean(euler_error)), ',' num2str(max(euler_error)), ').']);
@@ -83,6 +83,8 @@ disp(['Mean and max Euler error: (' num2str(mean(euler_error)), ',' num2str(max(
 disp(['This implies our average loss from numerical error is $1 for every: $' num2str(10^-mean(euler_error),8), ' dollars spent.']);
 
 %% Fixed Point Iteration
-%Euler u'(c_t) = beta * u'(c_t+1)
+% Euler u'(c_t) = beta * u'(c_t+1)
+% Redefine as FP: W_t+1 = beta (u'(c_t+1)/u'(c_t))W_t+1
 
-% Re-use function space above
+% Re-use function space above for W_t
+coeffs = zeros(size(grid));
