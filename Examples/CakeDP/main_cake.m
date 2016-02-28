@@ -38,21 +38,16 @@ value_grid = 0:1:cakemax;
 while (error > tolerance) && its < 1000
     % Plot value function
     value_plot(:,its) = funeval(coeffs, fspace, value_grid');
-    
     % Maximize bellman
     for pt = 1:length(grid)
         [cons_new(pt,:), val_new(pt,:)] = maxbell(consumption(pt), grid(pt), beta, coeffs, fspace);
     end
-    
     % Update initial control guess
     consumption = cons_new;
-    
     % Fit new approximant and recover coefficients
     coeffs = funfitxy(fspace, grid, -val_new);
-    
     % Calculate error
     error = max(abs(val_new-val_old));
-    
     % Store old value function
     val_old = val_new;
     
@@ -100,6 +95,36 @@ end
 disp(['Mean and max Euler error: (' num2str(mean(euler_error)), ',' num2str(max(euler_error)), ').']);
 
 disp(['This implies our average loss from numerical error is $1 for every: $' num2str(10^-mean(euler_error),8), ' dollars spent.']);
+
+
+%% Euler plots
+% Simulate a solution, any error is because you have reached 0 (numerical
+% not analytic) cake
+time_horizon = 2;
+cons_trajectory = zeros(cakemax,2);
+cons_start = cakemax/2;
+cake_level = zeros(cakemax,2);
+cake_level(:,1) = 1:cakemax;
+
+% Simulate by solving the Bellman, calculating next period's state and
+% looping
+for cake = 1:cakemax
+    for t = 1:time_horizon
+        cons_trajectory(cake,t) = maxbell(cons_start, cake_level(cake,t), beta, coeffs, fspace);
+        cake_level(cake,2) = cake_level(cake,1) - cons_trajectory(cake,1);
+        cons_start = cake_level(t+1)/2;
+    end
+end
+plot(1:time_horizon,cons_trajectory); hold on;
+plot(1:time_horizon+1,cake_level);
+xlabel('Time');
+ylabel('Consumption and remaining cake size');
+% Euler error calculation
+for cake = 1:cakemax
+    euler_error(cake) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(cake,2)^2)))/cons_trajectory(cake,1)-1));
+end
+
+plot(1:cakemax,euler_error)
 
 %% Fixed Point Iteration
 % Suppose you have mutant cake that now grows over time:
