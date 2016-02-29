@@ -61,11 +61,12 @@ end
 % Plot value function over iterations
 for i = 1:10:size(value_plot,2)
     plot(1:size(value_plot,1),value_plot(:,i));
+    xlabel('Cake size')
+    ylabel('Value function (utils)')
     hold on;
     pause(3)
 end
-xlabel('Cake size')
-ylabel('Discounted sum of infinite horizon utilities (utils)')
+
 
 
 % Simulate a solution, any error is because you have reached 0 (numerical
@@ -120,10 +121,11 @@ end
 
 % Euler error calculation
 for cakeit = 1:length(1:.2:cakemax)
-    euler_error(cake) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(cakeit,2)^2)))/cons_trajectory(cakeit,1)-1));
+    euler_error(cakeit) = log10(abs(sqrt(1/(beta*(1/cons_trajectory(cakeit,2)^2)))/cons_trajectory(cakeit,1)-1));
 end
 
-plot(1:cakemax,euler_error)
+
+plot(1:.2:cakemax,euler_error)
 
 %% Fixed Point Iteration
 % Suppose you have mutant cake that now grows over time:
