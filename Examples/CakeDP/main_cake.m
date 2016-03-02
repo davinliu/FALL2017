@@ -19,7 +19,7 @@ cakemax = initial_cake;
 cakemin = 0;
 
 % Define function space
-degree = 10;
+degree = 20;
 fspace = fundefn('cheb', degree, cakemin, cakemax);
 grid = funnode(fspace);
 grid = gridmake(grid);
