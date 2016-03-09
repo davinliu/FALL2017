@@ -1,7 +1,11 @@
 %% Estimate a MLE of a linear function, Y = X*beta + eps
 
+% Turn off display
+options = optimset('display','off');
+
+
 % Number of observations
-N = 100;
+N = 200;
 
 % Simulate X's
 X = mvnrnd([0 0 0], 2*eye(3), N);
@@ -23,7 +27,7 @@ initial_rhos = [1 1 1 1 1]';
 log_handle = @(rho)loglike(Y,X,rho);
 
 % Minimize negative log likelihood
-mle = fminunc(log_handle,initial_rhos);
+mle = fminunc(log_handle,initial_rhos,options);
 
 % Adjust error variance back into regular terms
 mle(5) = exp(mle(5));
@@ -50,6 +54,25 @@ end
 % Calculate standard errors
 bootstrapSE = std(samples,1);
 
+% Assuming normal distribution to construct confidence intervals
+conf_radius = 1.96*bootstrapSE(1:4)';
+upper95 = mle(1:4) + conf_radius;
+lower95 = mle(1:4) - conf_radius;
+confint = [lower95 upper95];
+
+% Check if we can reject null hypothesis that beta_i == 0
+for i = 1:4
+    % If true then both bounds have the same sign, either strictly above or
+    % strictly below 0
+    if confint(i,1)*confint(i,2) > 0
+        disp(['Reject the null hypothesis that parameter ' num2str(i) ...
+            ' is equal to zero.']);
+    else
+        disp(['Cannot reject the null hypothesis that parameter ' num2str(i) ...
+            ' is equal to zero.']);
+    end
+end
+
 % Calculate non-parametric p-values
 null_dist = samples;
 pvalues = zeros(4,1);
@@ -62,3 +85,13 @@ end
 for i = 1:4
     pvalues(i,1) = mean(abs(mle(i))<abs(null_dist(:,i)));
 end
+
+% Plot estimates with 95% confidence intervals
+errorbar(0:3,mle(1:4),conf_radius(1:4),'.');
+hold on
+plot(-1:.1:4,zeros(size(-1:.1:4)))
+
+% Plot estimates with standard errors
+errorbar(0:3,mle(1:4),bootstrapSE(1:4),'.');
+hold on
+plot(-1:.1:4,zeros(size(-1:.1:4)))
