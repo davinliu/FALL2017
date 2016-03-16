@@ -1,7 +1,7 @@
 function samples = bootstrap_mle(N,X,Y,initial_rhos)
 
     % Turn off display
-    options = optimset('display','off');
+    options = optimoptions(@fminunc,'display','off','algorithm','quasi-newton');
 
     % Bootstrap our sample
     sample_index = datasample(1:N,N);

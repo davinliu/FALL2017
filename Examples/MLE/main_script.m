@@ -1,18 +1,24 @@
 %% Estimate a MLE of a linear function, Y = X*beta + eps
 
 % Turn off display
-options = optimset('display','off');
+options = optimoptions(@fminunc,'display','off', 'algorithm','quasi-newton');
 
 
 % Number of observations
-N = 200;
+N = 100;
+
+% X variance
+x_var = 3;
+
+% Noise variance
+noise_var = 1;
 
 % Simulate X's
-X = mvnrnd([0 0 0], 2*eye(3), N);
+X = mvnrnd([0 0 0], x_var*eye(3), N);
 X = [ones(N, 1) X];
 
 % True parameter values
-true_betas = [0.1, 0.5, -0.3, 0. 2]';
+true_betas = [0.1, 0.5, -0.3, 0. noise_var]';
 
 % Simulate errors
 epsilons = normrnd(0,true_betas(5),[N,1]);
@@ -90,7 +96,8 @@ end
 errorbar(0:3,mle(1:4),conf_radius(1:4),'.');
 hold on
 plot(-1:.1:4,zeros(size(-1:.1:4)))
-
+pause(3)
+close
 % Plot estimates with standard errors
 errorbar(0:3,mle(1:4),bootstrapSE(1:4),'.');
 hold on
